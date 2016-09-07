@@ -16,7 +16,7 @@ if [[ $VNET1 == "fuel" ]]
 #it's devsteck
      adr_node=`(ifconfig $VNET | awk '/addr:/ {print  $2}' |cut -c6-21 | cut -d. -f 1,2,3)`
 #     echo $adr_node
-     mac=`(arping -c 1 $adr_node.1 | awk '/bytes/ {print $1}')`
+     mac=`(sudo arping -c 1 $adr_node.1 | awk '/bytes/ {print $1}')`
 #echo $mac
     if [[ $mac == '42' ]]
       then
