@@ -1,35 +1,41 @@
-#!/bin/bash                                                                                                                                                                    
-used_cpus=0
-used_memory=0
-st_pools=`virsh pool-list|awk '/active/ {print $1}'`
-mem_total=`virsh nodememstats|awk '/total/ {print $3}'`
-gt_cpus=`cat /proc/cpuinfo |grep processor|wc -l`
-let "total_vcpus = gt_cpus * 3"
-#list of actual vms                                                                                                                                                            
-running_vms=`virsh list|awk '/running/ { print $2}'`
-echo "Calculating"
-#Calculate used memory and cpus                                                                                                                                                
-for vm in $running_vms
-    do
-         vm_mem=`virsh dumpxml ${vm}|awk -F "<|>" '/memory/ {print $3}'`
-         vm_cpus=`virsh dumpxml ${vm}|awk -F "<|>" '/vcpu/ {print $3}'`
-         let "used_memory += vm_mem"
-         let "used_cpus += vm_cpus"
-    done
-let "freemem = (mem_total - used_memory) / 1024"
-let "used_memory /= 1024"
-let "freecpus = total_vcpus - used_cpus"
-echo "${used_cpus} vcpus used"
-echo "${used_memory}MB of memory used"
-echo "${freemem}MB of memory free"
-echo "${freecpus} vcpus free"
-
-#Available space in pools                                                                                                                                                      
-for st_pool in ${st_pools}
-    do
-      pool_path=`virsh pool-dumpxml ${st_pool} |awk 'BEGIN {FS="<|>"} /path/ {print $3}'`
-      free_space=`df --output=avail ${pool_path}|grep -v Avail`
-      let "free_space /= 1024"
-      let "free_space /= 1024"
-      echo "Free space in ${st_pool} pool is ${free_space} GB"
+#!/bin/bash
+mem_used=0
+cpu_used=0
+hd_used=0
+#Calculate memory used and free
+list_vm=`virsh list --all | awk '/running/ { print $2}'`
+for i in $list_vm
+do
+   mem_used=`virsh dominfo $i | awk '/Max memory/ { print $3}'`
+   cpu_used=`virsh dominfo $i | awk '/CPU/ {print $2}' | sed 2d`
+   let "mem_used += mem_used"
+   let "cpu_used += cpu_used"
 done
+
+total_mem=`free | awk '/Mem/ {print $2}'`
+let "free_mem = ($total_mem - $mem_used) / 1024"
+
+# Maybe we must devide some value for system work 
+echo "$free_mem   MB memory for create new VM"
+#total processor n*4 or n*3 or beter at 2 ??? 
+total_cpu=`cat /proc/cpuinfo | grep "processor" | wc -l`
+   let "cpu_validate = total_cpu * 4 - cpu_used"
+echo "$cpu_validate free vcpu for used"
+
+
+#Chek pool free 
+list_pool=`virsh pool-list | awk '/active/ {print $1}'`
+for j in $list_pool
+do
+   hd_used=`virsh pool-info $j | awk '/Allocation/ {print $2}'`
+   let "hd_used += hd_used"
+done
+#echo "$hd_used"
+
+#Need resolve where is free at one hd
+#df -h
+echo "Please write disk spase"
+
+total_hd=`df -h | awk '/sda6/ {print $4}' | sed 's/^\(.*\).$/\1/'`
+   let "free_hd = $total_hd -$hd_used"
+echo "$free_hd  Gb free for create VM"
