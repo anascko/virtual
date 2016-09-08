@@ -28,6 +28,7 @@ list_pool=`virsh pool-list | awk '/active/ {print $1}'`
 for j in $list_pool
 do
    hd_used=`virsh pool-info $j | awk '/Allocation/ {print $2}'`
+   hd_used=`echo $hd_used*1024 | bc -l | cut -d"." -f1`
    let "hd_used += hd_used"
 done
 #echo "$hd_used"
@@ -36,6 +37,6 @@ done
 #df -h
 echo "Please write disk spase"
 
-total_hd=`df -h | awk '/sda6/ {print $4}' | sed 's/^\(.*\).$/\1/'`
-   let "free_hd = $total_hd -$hd_used"
+total_hd=`df --block-size=1G | awk '/vg00-root/ {print $4}'`
+   let "free_hd = $total_hd - $hd_used"
 echo "$free_hd  Gb free for create VM"
