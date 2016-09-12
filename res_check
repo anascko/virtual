@@ -1,4 +1,6 @@
 #!/bin/bash
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 mem_used=0
 cpu_used=0
 hd_used=0
