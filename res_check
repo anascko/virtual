@@ -8,7 +8,7 @@ hd_used=0
 list_vm=`virsh list --all | awk '/running/ { print $2}'`
 for i in $list_vm
 do
-   mem_used=`virsh dominfo $i | awk '/Max memory/ { print $3}'`
+   mem_used=`virsh dominfo $i | awk '/Used memory/ { print $3}'`
    cpu_used=`virsh dominfo $i | awk '/CPU/ {print $2}' | sed 2d`
    let "mem_used += mem_used"
    let "cpu_used += cpu_used"
@@ -25,20 +25,29 @@ total_cpu=`cat /proc/cpuinfo | grep "processor" | wc -l`
 echo "$cpu_validate free vcpu for used"
 
 
-#Chek pool free 
+#Chek pool free
 list_pool=`virsh pool-list | awk '/active/ {print $1}'`
 for j in $list_pool
-do
-   hd_used=`virsh pool-info $j | awk '/Allocation/ {print $2}'`
-   hd_used=`echo $hd_used*1024 | bc -l | cut -d"." -f1`
-   let "hd_used += hd_used"
-done
+	do
+	hd_used=`virsh pool-info $j | awk '/Allocation/ {print $2 $3}'`
+	mera=`echo $hd_used |rev | cut -c1-3 | rev`	
+		if [[ $mera == "TiB" ]]
+			then  hd_used=`echo $hd_used*1024 | bc -l | cut -d"." -f1`
+			let "hd_used += hd_used"
+		else 
+			hd_used=`echo $hd_used | cut -c1-3`
+			let "hd_used += hd_used"
+		fi
+	done
 #echo "$hd_used"
 
 #Need resolve where is free at one hd
 #df -h
-echo "Please write disk spase"
-
-total_hd=`df --block-size=1G | awk '/vg00-root/ {print $4}'`
+total_hd=`df --block-size=1G /var/lib/libvirt | awk '{print $4}' | grep -v "Available"`
    let "free_hd = $total_hd - $hd_used"
 echo "$free_hd  Gb free for create VM"
+	oversel=`echo $free_hd | cut -c1`
+if [[ $oversel == '-' ]]
+	then 
+	echo "DON'T USE THIS NODE!!!"
+fi
