@@ -21,7 +21,7 @@ let "free_mem = ($total_mem - $mem_used) / 1024"
 echo "$free_mem   MB memory for create new VM"
 #total processor n*4 or n*3 or beter at 2 ??? 
 total_cpu=`cat /proc/cpuinfo | grep "processor" | wc -l`
-   let "cpu_validate = total_cpu * 4 - cpu_used"
+   let "cpu_validate = total_cpu * 2 - cpu_used"
 echo "$cpu_validate free vcpu for used"
 
 
