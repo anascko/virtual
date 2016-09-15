@@ -1,3 +1,5 @@
+#!/bin/bash
+export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 VNET=`(brctl show | awk '/p4p2/ {print $1}')`
 VNET1=`(echo $VNET | cut -c1-4)`
