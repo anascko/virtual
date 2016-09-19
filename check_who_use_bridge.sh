@@ -15,7 +15,7 @@ if [[ $VNET == "" ]]
     exit 1;
 fi
 # check if exist
-else
+#else
     VNET1=`(echo $VNET | cut -c1-4)`
     name_vm=""
     if [[ $VNET1 == "fuel" ]]
@@ -50,4 +50,4 @@ else
     
 fi
 # adr_node=`(ifconfig $VNET | awk '/addr:/ {print  $2}' |cut -c6-21)
-echo "Please ask's admin of $name_vm or to vsaienko@mirantis.com turn off bridge $VNET from p4p2"
+echo "Please ask's admin of $name_vm turn off bridge $VNET from p4p2"
