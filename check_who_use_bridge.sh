@@ -27,7 +27,7 @@ if [[ $VNET == "" ]]
 	then
 	    brctl stp $your_bridge no
 	fi
-    brctl addif $your_bridge p4p2
+    brctl addif $your_bridge $eth
     exit 1;
 fi
 # check if exist
@@ -66,4 +66,4 @@ fi
     
 fi
 # adr_node=`(ifconfig $VNET | awk '/addr:/ {print  $2}' |cut -c6-21)
-echo "Please ask's admin of $name_vm turn off bridge $VNET from p4p2"
+echo "Please ask's admin of $name_vm turn off bridge $VNET from $eth"
