@@ -21,7 +21,7 @@ VNET=`(brctl show | grep "$eth"| awk '{print $1}')`
 if [[ $VNET == "" ]]
     then
     echo "Interface $eth is free and will be configured with your intarface aded in params $your_bridge"
-    	if [[ $your_bridge == "0"]]
+    	if [[ $your_bridge == "0" ]]
 	    then echo "You incorrectly specified parameter bridge interface"
 	    exit 1
 	fi
