@@ -1,5 +1,5 @@
 #!/bin/bash
-your_bridge=$1
+#your_bridge=$1
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 #check hostnname and eth2 interface name
