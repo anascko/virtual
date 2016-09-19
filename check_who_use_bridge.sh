@@ -22,7 +22,7 @@ if [[ $VNET == "" ]]
     then
     echo "Interface $eth is free and will be configured with your intarface aded in params $your_bridge"
     	if [[ $your_bridge == "0" ]]
-    	then echo "You incorrectly specified parameter $your_bridge interface"
+    	then echo "You incorrectly specified parameter bridge interface"
     	exit
 	fi
     stp_check=`(brctl show | grep "$your_bridge" | awk '{print $3}')`
