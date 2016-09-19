@@ -2,9 +2,25 @@
 your_bridge=$1
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
-VNET=`(brctl show | awk '/p4p2/ {print $1}')`
+#check hostnname and eth2 interface name
+case $(hostname) in
+cz7918)
+eth=p4p2;;
+cz7764.bud.mirantis.net)
+eth=eth1;;
+cz7364.bud.mirantis.net)
+eth=em2;;
+cz7363.bud.mirantis.net)
+eth=em2;;
+cz5578)
+eth=em2;;
+srv78-bud)
+eth=p4p2;;
+esac
+VNET=`(brctl show | grep "$eth"| awk '{print $1}')`
 if [[ $VNET == "" ]]
     then
+    echo "Interface $eth is free and will be configured with your intarface aded in params $your_bridge"
     stp_check=`(brctl show | grep "$your_bridge" | awk '{print $3}')`
     echo $stp_check
         if [[ $stp_check == "yes" ]]
