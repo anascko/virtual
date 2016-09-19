@@ -17,14 +17,14 @@ eth=em2;;
 srv78-bud)
 eth=p4p2;;
 esac
+if [[ $your_bridge == "0" ]]
+    then echo "You incorrectly specified parameter bridge interface"
+    exit 1
+fi
 VNET=`(brctl show | grep "$eth"| awk '{print $1}')`
 if [[ $VNET == "" ]]
     then
     echo "Interface $eth is free and will be configured with your intarface aded in params $your_bridge"
-    	if [[ $your_bridge == "0" ]]
-	    then echo "You incorrectly specified parameter bridge interface"
-	    exit 1
-	fi
     stp_check=`(brctl show | grep "$your_bridge" | awk '{print $3}')`
     echo $stp_check
         if [[ $stp_check == "yes" ]]
