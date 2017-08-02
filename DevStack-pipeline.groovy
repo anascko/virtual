@@ -9,6 +9,7 @@
 
 def CreateVM(vm_name, kvm_soket, img){
     return sh(script:"""
+    set -xe
     export new_img=${vm_name} &&
     export LIBVIRT_SOCKET=${kvm_soket} && 
     export old_img=${img} &&
