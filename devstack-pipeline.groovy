@@ -45,7 +45,7 @@ node() {
     }
     }
     
-    stage (Deploy Devstack){
+    stage ('Deploy Devstack') {
       writeFile file: '/tmp/ssh-config', text: """\
         StrictHostKeyChecking no
         UserKnownHostsFile /dev/null
