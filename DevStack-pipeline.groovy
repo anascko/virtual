@@ -12,12 +12,12 @@ def CreateVM(vm_name, kvm_soket, img){
     set -xe
     export new_img=${vm_name} &&
     export LIBVIRT_SOCKET=${kvm_soket} && 
-    export old_img=${img} &&
-    virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone &&
-    virsh start ${new_img} &&
-    mac=$(virsh domiflist ${new_img} | awk '/network/ {print $5}') &&
-    echo ${mac} &&
-    ip=$(/usr/sbin/arp -an  |grep "${mac}" | grep -o -P '(?<=\? \().*(?=\) .*)') &&
+    export old_img=${img}
+    virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone
+    virsh start ${new_img}
+    mac=$(virsh domiflist ${new_img} | awk '/network/ {print $5}')
+    echo ${mac} 
+    ip=$(/usr/sbin/arp -an  |grep "${mac}" | grep -o -P '(?<=\? \().*(?=\) .*)')
     echo ${ip}
     """, returnStdout: true)
 }   
