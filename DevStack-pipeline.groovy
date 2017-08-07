@@ -8,7 +8,7 @@
 **/
  
 
-// node {
+node() {
   def LIBVIRT_SOCKET = "--connect=qemu:///system"
 //  if (DISTRO_RELEASE == xenial){
   def old_img = 'devstack-generic-ubuntu-xenial'
@@ -61,5 +61,5 @@
           sh "sshpass -e scp -qF \"${WORKSPACE}/ssh-config\" ./local.conf stack@${ENV_IP}:/opt/stack/devstack"
           sh "sshpass -e ssh -F \"${WORKSPACE}/ssh-config\" stack@${ENV_IP} cd devstack; ./stack.sh; exit"
        }
- //    }
+    }
  }
