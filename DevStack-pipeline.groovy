@@ -32,7 +32,6 @@ node() {
         def ENV_IP = IP.replaceAll('\\(','')
     }   
 
-   }
     
     stage ('Deploy Devstack') {
       writeFile file: '/tmp/ssh-config', text: """\
