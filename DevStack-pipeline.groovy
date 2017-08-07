@@ -37,7 +37,7 @@ node() {
     stage ('Create VM') {
 
     try {
-        ENV_IP = CreateVM("${params.ENV_NAME}","${LIBVIRT_SOCKET}","${params.DISTRO_RELEASE}").trim()
+        ENV_IP = CreateVM("${params.ENV_NAME}","${LIBVIRT_SOCKET}","${params.DISTRO_RELEASE}")
         echo "${ENV_IP}"
     }
     }
