@@ -14,7 +14,7 @@
   def old_img = 'devstack-generic-ubuntu-xenial'
 //    else {
 //   'Distro release not present'
-  }
+//  }
   def new_img = "${env.ENV_NAME}"
 
   def SSHUSER = "cirros"
