@@ -20,10 +20,7 @@ node {
 
   def SSHUSER = "cirros"
   def SSHPASS = "cubswin:)"
-  try {
-     //
-     // Prepare machines
-     //
+
      stage ('Create VM') {
        sh "set -xe && printenv"
        sh "virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone || true"
@@ -66,5 +63,5 @@ node {
           sh "sshpass -e ssh -F /tmp/ssh-config stack@${ENV_IP} cd devstack; ./stack.sh; exit"
        }
      }
-   }
+   
 }
