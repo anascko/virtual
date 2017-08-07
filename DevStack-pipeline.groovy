@@ -32,16 +32,16 @@
       }   
     
       stage ('Deploy Devstack') {
-        writeFile file: '/tmp/ssh-config', text: """\
+        writeFile file: WORKSPACE + '/ssh-config', text: """\
           StrictHostKeyChecking no
           UserKnownHostsFile /dev/null
           ForwardAgent yes
           Port 22
         """.stripIndent()
 
-        writeFile file: '/tmp/local.conf', text: "${LOCAL_CONF}"
+        writeFile file: WORKSPACE + '/local.conf', text: "${LOCAL_CONF}"
 
-        writeFile file: '/tmp/sckrips.sh', text: """\
+        writeFile file: WORKSPACE + '/sckrips.sh', text: """\
           #!/bin/bash -x
 	  set -e
 	  useradd -s /bin/bash -d /opt/stack -m stack
@@ -52,14 +52,14 @@
 	  chown -R stack:stack /opt/stack/devstack
         """.stripIndent()
 
-        sh "chmod +x /tmp/sckrips.sh"
+        sh "chmod +x ${WORKSPACE}/sckrips.sh"
 
         withEnv(["SSHPASS=${SSHPASS}"]) {
 
-          sh "sshpass  -e scp -qF /tmp/ssh-config /tmp/sckrips.sh cirros@${ENV_IP}:."
-          sh "sshpass -e ssh -F /tmp/ssh-config cirros@${ENV_IP} ./sckrips.sh"
-          sh "sshpass -e scp -qF /tmp/ssh-config /tmp/local.conf stack@${ENV_IP}:/opt/stack/devstack"
-          sh "sshpass -e ssh -F /tmp/ssh-config stack@${ENV_IP} cd devstack; ./stack.sh; exit"
+          sh "sshpass  -e scp -qF \"${WORKSPACE}/ssh-config\" ./sckrips.sh cirros@${ENV_IP}:."
+          sh "sshpass -e ssh -F \"${WORKSPACE}/ssh-config\" cirros@${ENV_IP} ./sckrips.sh"
+          sh "sshpass -e scp -qF \"${WORKSPACE}/ssh-config\" ./local.conf stack@${ENV_IP}:/opt/stack/devstack"
+          sh "sshpass -e ssh -F \"${WORKSPACE}/ssh-config\" stack@${ENV_IP} cd devstack; ./stack.sh; exit"
        }
  //    }
  }
