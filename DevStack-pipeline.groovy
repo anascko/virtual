@@ -10,11 +10,10 @@
 
 // node {
   def LIBVIRT_SOCKET = "--connect=qemu:///system"
-  if (DISTRO_RELEASE == xenial){
-    old_img = 'devstack-generic-ubuntu-xenial'
-  }
-  else {
-    'Distro release not present'
+//  if (DISTRO_RELEASE == xenial){
+  def old_img = 'devstack-generic-ubuntu-xenial'
+//    else {
+//   'Distro release not present'
   }
   def new_img = "${env.ENV_NAME}"
 
