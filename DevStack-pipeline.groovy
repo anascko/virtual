@@ -18,9 +18,9 @@ node() {
     }
     def new_img = "${env.ENV_NAME}"
 
-    def SSHUSER = cirros
-    def SSHPASS = cubswin:)
-    
+    def SSHUSER = "cirros"
+    def SSHPASS = "cubswin:)"
+	
     stage ('Create VM') {
     sh "set -xe && export new_img=${vm_name} || true"
     sh "virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone || true"
