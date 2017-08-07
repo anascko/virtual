@@ -6,21 +6,7 @@
  *   DEVSTACK_BRANCH
  *   LOCAL_CONF
 **/
-
-def CreateVM(vm_name, kvm_soket, img){
-    return sh(script:"""
-    set -xe
-    export new_img=${vm_name} &&
-    export LIBVIRT_SOCKET=${kvm_soket} && 
-    export old_img=${img}
-    virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone
-    virsh start ${new_img}
-    mac=$(virsh domiflist ${new_img} | awk '/network/ {print $5}')
-    echo ${mac} 
-    ip=$(/usr/sbin/arp -an  |grep "${mac}" | grep -o -P '(?<=\? \().*(?=\) .*)')
-    echo ${ip}
-    """, returnStdout: true)
-}   
+ 
 
 node() {
     def LIBVIRT_SOCKET = "--connect=qemu:///system"
@@ -30,17 +16,20 @@ node() {
     else {
         'Distro release not present'
     }
+    def new_img = "${env.ENV_NAME}"
 
     def SSHUSER = cirros
     def SSHPASS = cubswin:)
     
     stage ('Create VM') {
+    sh "set -xe && export new_img=${vm_name} || true"
+    sh "virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone || true"
+    sh "virsh start ${new_img}"
+    def mac = sh(script: "virsh domiflist ${new_img} | awk '/network/ {print $5}'")
+    def ip = sh(script: "/usr/sbin/arp -an  |grep "${mac}" | grep -o -P '(?<=\? \().*(?=\) .*)'", returnStdout: true)
+    }   
 
-    try {
-        ENV_IP = CreateVM("${params.ENV_NAME}","${LIBVIRT_SOCKET}","${params.DISTRO_RELEASE}")
-        echo "${ENV_IP}"
-    }
-    }
+   }
     
     stage ('Deploy Devstack') {
       writeFile file: '/tmp/ssh-config', text: """\
