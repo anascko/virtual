@@ -44,7 +44,7 @@ node() {
 
       writeFile file: '/tmp/local.conf', text: "${LOCAL_CONF}"
 
-      writeFile file '/tmp/sckrips.sh', text: """\
+      writeFile file: '/tmp/sckrips.sh', text: """\
         #!/bin/bash -x
 	    set -e
 	    useradd -s /bin/bash -d /opt/stack -m stack
