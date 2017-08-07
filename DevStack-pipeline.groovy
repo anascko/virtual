@@ -27,8 +27,8 @@ node() {
         sh "virsh start ${new_img} || true"
         def mac = sh(script: "virsh domiflist ${new_img} | awk '/virbr0/ {print \$5}'", returnStdout: true)
         println mac.text
-        def a = "\("
-        def b = "\)
+        def a = '\('
+        def b = '\)'
         def ENV_IP = sh(script: "/usr/sbin/arp -an  |grep ${mac} |awk '{print \$2}' | tr -d ${a} | tr -d ${b} ", returnStdout: true)
       }   
 
