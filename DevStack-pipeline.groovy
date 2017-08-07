@@ -22,13 +22,15 @@ node() {
     def SSHPASS = "cubswin:)"
 	
     stage ('Create VM') {
-      sh "set -xe && printenv"
-      sh "virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone || true"
-      sh "virsh start ${new_img} || true"
-      def mac = sh(script: "virsh domiflist ${new_img} | awk '/virbr0/ {print \$5}'", returnStdout: true)
-      println mac.text
-      def ENV_IP = sh(script: "/usr/sbin/arp -an  |grep ${mac} |awk '{print \$2}' | tr -d \\\( | tr -d \\\) ", returnStdout: true)
-    }   
+        sh "set -xe && printenv"
+        sh "virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone || true"
+        sh "virsh start ${new_img} || true"
+        def mac = sh(script: "virsh domiflist ${new_img} | awk '/virbr0/ {print \$5}'", returnStdout: true)
+        println mac.text
+        def a = "\("
+        def b = "\)
+        def ENV_IP = sh(script: "/usr/sbin/arp -an  |grep ${mac} |awk '{print \$2}' | tr -d ${a} | tr -d ${b} ", returnStdout: true)
+      }   
 
    }
     
