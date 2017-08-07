@@ -22,7 +22,7 @@ node() {
     def SSHPASS = "cubswin:)"
 	
     stage ('Create VM') {
-      sh "set -xe && export new_img=${vm_name} || true"
+      sh "set -xe && printenv"
       sh "virt-clone ${LIBVIRT_SOCKET} -o ${old_img} -n ${new_img} --auto-clone || true"
       sh "virsh start ${new_img} || true"
       def mac = sh(script: "virsh domiflist ${new_img} | awk '/network/ {print $5}'", returnStdout: true)
